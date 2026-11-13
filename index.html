@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shift Report Electrical P14</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700" rel="stylesheet">
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--ink:#17212b;--mut:#66727f;--line:#dbe2ea;--acc:#1d5fa8;--accink:#fff;--field:#f6f8fb;--bar:#12304f;--y:#ffd500;--soft:#e7f0fb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10151a;--card:#1a2128;--ink:#e8edf2;--mut:#9aa7b3;--line:#2f3943;--acc:#6aa7e6;--accink:#0d1d2c;--field:#141a20;--bar:#0b1b2b;--soft:#203244}}
+:root[data-theme="dark"]{--bg:#10151a;--card:#1a2128;--ink:#e8edf2;--mut:#9aa7b3;--line:#2f3943;--acc:#6aa7e6;--accink:#0d1d2c;--field:#141a20;--bar:#0b1b2b;--soft:#203244}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "IBM Plex Sans",system-ui,Arial,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bar);z-index:40}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+/* App bar */
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bar);color:#fff;display:flex;align-items:center;gap:12px;padding:10px 16px}
+.logo{width:38px;height:38px;border-radius:10px;background:var(--y);color:#222;display:grid;place-items:center;font-size:20px;flex:none}
+.appbar h1{margin:0;font-size:16px;font-weight:600;line-height:1.2}
+.appbar p{margin:0;font-size:12px;opacity:.75}
+.appbar .sp{flex:1}
+.ib{width:44px;height:44px;border-radius:10px;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:22px;line-height:1}
+.menu{position:absolute;right:12px;top:100%;margin-top:4px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:6px;min-width:210px;display:none}
+.menu.show{display:block}
+.menu button{display:block;width:100%;text-align:left;border:0;background:none;padding:12px;border-radius:8px;font-size:15px}
+.menu button:hover{background:var(--soft)}
+/* Layout */
+main{display:grid;grid-template-columns:minmax(340px,440px) 1fr;gap:18px;padding:16px;max-width:1500px;margin:0 auto;align-items:start}
+#panePrev{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(20,40,70,.06)}
+.card h2{margin:0 0 12px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--mut)}
+label{display:block;font-size:13px;font-weight:500;color:var(--mut);margin-bottom:5px}
+input,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-height:46px;-webkit-appearance:none;appearance:none}
+textarea{resize:none;line-height:1.45;overflow:hidden;display:block}
+.f{margin-bottom:12px}.f:last-child{margin-bottom:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;min-height:46px;border:1px solid var(--line);background:var(--field);border-radius:10px;font-weight:600;font-size:16px}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.chip{display:inline-block;margin-top:8px;padding:4px 10px;border-radius:99px;background:var(--soft);color:var(--acc);font-size:13px;font-weight:500}
+.note{font-size:12.5px;color:var(--mut);margin:6px 0 0}
+/* Kartu kegiatan */
+.entry{padding:0;overflow:hidden}
+.eh{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:12px 14px;text-align:left;min-height:64px}
+.no{flex:none;width:34px;height:34px;border-radius:50%;background:var(--y);color:#222;font-weight:700;display:grid;place-items:center}
+.sm{flex:1;min-width:0;display:flex;flex-direction:column}
+.sm b{font-size:15px;font-weight:600}
+.sm small{font-size:13px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{color:var(--mut);transition:transform .2s;font-size:18px}
+.open .chev{transform:rotate(180deg)}
+.eb{display:none;padding:2px 14px 14px;border-top:1px solid var(--line);padding-top:14px}
+.open .eb{display:block}
+.acts{display:flex;gap:8px;margin-top:14px}
+.acts button{flex:1;min-height:44px;border:1px solid var(--line);background:var(--field);border-radius:10px;font-size:14px}
+.acts .del{color:#c0392b}
+.addbtn{width:100%;min-height:54px;border:2px dashed var(--acc);background:var(--soft);color:var(--acc);border-radius:14px;font-weight:600;font-size:16px;margin-bottom:12px}
+select{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:11px 10px;min-height:46px}
+.sub{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--bg)}
+.sub .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:600}
+.mini{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 12px;min-height:38px;font-size:14px}
+.mini.del{color:#c0392b}
+.row3 label{line-height:1.25}
+.row3 select{padding:11px 2px;font-size:15px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:end}
+.sh{margin:2px 0 8px;font-weight:600;font-size:13px;color:var(--acc)}
+.rowd{display:flex;gap:8px;margin-bottom:8px}.rowd>div{flex:1}
+.mrow{padding:10px 0;border-top:1px solid var(--line)}
+/* Pratinjau */
+.exports{display:flex;gap:8px;margin-bottom:12px}
+.ex{position:relative;flex:1;min-width:0}
+.ex>button{width:100%;min-height:48px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:600;padding:8px 6px;font-size:14px}
+.ex>button.sec{border:2px solid var(--acc);color:var(--acc)}
+.dlmenu{position:absolute;left:0;right:0;top:100%;margin-top:4px;z-index:20;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:6px;display:none}
+.dlmenu.show{display:block}
+.dlmenu button{display:block;width:100%;text-align:left;border:0;background:none;padding:13px 12px;border-radius:8px;font-size:15px;min-height:46px}
+.dlmenu button:hover{background:var(--soft)}
+.exports .p{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.exports button:disabled{opacity:.6}
+.zoomrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;color:var(--mut)}
+.zoomrow button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 12px;min-height:36px}
+#fit{width:100%;overflow:hidden;border-radius:6px}
+#scaler{width:1120px;transform-origin:0 0}
+/* Tab bawah (smartphone) */
+.tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px}
+.tabbar button{flex:1;min-height:52px;border:0;background:none;border-radius:12px;font-weight:600;font-size:14px;color:var(--mut)}
+.tabbar button[aria-selected="true"]{background:var(--soft);color:var(--acc)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:50;background:#1f2933;color:#fff;border-radius:12px;padding:12px 16px;display:none;gap:14px;align-items:center;max-width:92vw;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.toast.show{display:flex}.toast button{border:0;background:none;color:var(--y);font-weight:600;padding:4px}
+@media(max-width:900px){
+ main{display:block;padding:12px 12px calc(96px + env(safe-area-inset-bottom,0px))}
+ .pane{display:none}
+ body[data-tab="form"] #paneForm,body[data-tab="prev"] #panePrev{display:block}
+ #panePrev{position:static}
+ .tabbar{display:flex}
+ .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+@media(min-width:901px){.toast{bottom:24px}}
+/* ===== Kertas laporan (selalu terang) ===== */
+#paper2{margin-top:24px}
+#scaler.merged{background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.25)}
+#scaler.merged .paper{box-shadow:none}
+#scaler.merged #paper2{margin-top:0;padding-top:8px}
+table.rt+table.rt{margin-top:22px}
+.ah{margin:16px 0 10px;font-size:15px;font-weight:600}
+.rt.grid td{border:1px solid #222;text-align:center;padding:8px 6px;vertical-align:middle}
+.rt.grid td.b{font-weight:600;background:#f3f7fb}
+.paper{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff;color:#000;width:1120px;min-width:1120px;padding:26px 30px 22px;font-family:"IBM Plex Sans",Arial,Helvetica,sans-serif;box-shadow:0 1px 8px rgba(0,0,0,.25)}
+.rh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.rtitle{margin:0 auto;padding:10px 38px;text-align:center;font-weight:700;font-size:16px;line-height:1.35;background:#ffd500;border:2px solid #222;border-radius:12px;box-shadow:0 2px 3px rgba(0,0,0,.3)}
+.rdate{border:2px solid #222;padding:12px 16px;font-size:13px;font-weight:700;white-space:nowrap}
+.rdate span{font-weight:500;font-size:14px;margin-left:6px}
+table.rt{width:100%;border-collapse:collapse;border:2px solid #222;table-layout:fixed;font-size:13px}
+.rt th{border:2px solid #222;padding:8px 4px;font-weight:700;text-align:center;background:#bfe3f7;color:#000}
+.rt td{border-left:2px solid #222;border-right:2px solid #222;padding:5px 7px;vertical-align:top;font-size:13px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.rt td.c{text-align:center}
+.rt tr.last td{height:100%}
+.rt tfoot td{border:0}
+.rt td.sp{border-top:0}
+.rt tbody{border-top:2px solid #222}
+.rt .big{font-size:20px;font-weight:600;text-align:center}
+.legend{margin-top:12px;font-size:13px;display:grid;grid-template-columns:70px 28px auto;row-gap:1px;width:260px;line-height:1.3}
+.sign{display:flex;justify-content:flex-end;gap:60px;margin-top:6px;font-size:12px}
+@media print{
+@page{size:A4 landscape;margin:8mm}
+body{background:#fff}
+body::before,.appbar,.tabbar,.toast,#paneForm,.noprint{display:none!important}
+main{display:block;padding:0}
+#panePrev{position:static;display:block!important}
+#fit{height:auto!important;overflow:visible}
+#scaler{transform:none!important;width:100%}
+.paper{box-shadow:none;width:100%;min-width:0;padding:0;zoom:.86}
+}
+</style>
+</head>
+<body data-tab="form">
+<header class="appbar noprint">
+ <div class="logo">⚡</div>
+ <div><h1>Shift Report P14</h1><p>Electrical Department</p></div>
+ <div class="sp"></div>
+ <button class="ib" id="menuBtn" type="button" aria-label="Menu">⋯</button>
+ <div class="menu" id="menu">
+  <button id="sample" type="button">Isi dengan contoh</button>
+  <button id="reset" type="button">Kosongkan semua</button>
+  <button id="json" type="button">Simpan data (.json)</button>
+  <button id="load" type="button">Buka data (.json)</button>
+ </div>
+ <input type="file" id="file" accept=".json,application/json" hidden>
+</header>
+
+<main>
+ <section class="pane" id="paneForm">
+  <div class="card">
+   <h2>Info laporan</h2>
+   <div class="f"><label for="date">Tanggal</label><input type="date" id="date"><span class="chip" id="dayl"></span></div>
+   <div class="f"><label>Shift</label>
+    <div class="seg" id="shiftSeg"><button type="button" data-sh="A">A</button><button type="button" data-sh="B">B</button><button type="button" data-sh="C">C</button></div></div>
+   <div class="f"><label for="by">Done By</label><input id="by" placeholder="Nama petugas" autocomplete="name"></div>
+  </div>
+  <div id="rows"></div>
+  <button type="button" class="addbtn" id="add">+ Tambah kegiatan</button>
+  <p class="note">Satu kegiatan boleh memuat beberapa kode IAC (satu per baris). Data tersimpan otomatis di perangkat ini.</p>
+  <div class="card"><h2>Lampiran</h2><div id="att"></div></div>
+ </section>
+
+ <section class="pane" id="panePrev">
+  <div class="card" style="padding:14px">
+   <div class="exports noprint">
+    <div class="ex"><button id="dlBtn" type="button" class="p" aria-haspopup="true" aria-expanded="false">⬇ Unduh File ▾</button>
+     <div class="dlmenu" id="dlMenu"><button type="button" data-fmt="png">Gambar PNG</button><button type="button" data-fmt="jpg">Gambar JPG</button><button type="button" data-fmt="pdf">Dokumen PDF</button></div></div>
+   </div>
+   <div class="zoomrow noprint"><span>Pratinjau laporan</span><button id="zoomBtn" type="button">Ukuran asli</button></div>
+   <div id="fit"><div id="scaler"><div class="paper" id="paper"></div><div class="paper" id="paper2" style="display:none"></div></div></div>
+  </div>
+ </section>
+</main>
+
+<nav class="tabbar noprint" role="tablist">
+ <button type="button" role="tab" data-tab="form" aria-selected="true">✎ Isi data</button>
+ <button type="button" role="tab" data-tab="prev" aria-selected="false">▤ Pratinjau &amp; unduh</button>
+</nav>
+<div class="toast" id="toast" role="status"><span id="tmsg"></span><button id="tact" type="button" hidden></button></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var KEY="shiftreport_p14_v1",DAYS=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+var S={date:"",shift:"B",by:"",rows:[],att:null},OPEN=-1,ZOOM=false,DL=null,TT;
+function $(i){return document.getElementById(i)}
+try{if(window.claude&&window.claude.use)window.claude.use("downloads").then(function(d){DL=d}).catch(function(){})}catch(e){}
+function pad(n){return String(n).padStart(2,"0")}
+function blank(){return{s:"",f:"",iac:"",trouble:"",action:"",cat:""}}
+function today(){var d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function nt(v){var m=/^(\d{1,2})[.:](\d{2})$/.exec(String(v||"").trim());return m?pad(m[1])+":"+m[2]:""}
+function tm(v){return String(v||"").replace(":",".")}
+function esc(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fl(s){return String(s||"").split("\n")[0]}
+function fmtDate(v){if(!v)return"";var p=v.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);return DAYS[d.getDay()]+", "+p[2]+" - "+p[1]+" - "+p[0]}
+var LOC=["LSS1","LSS2","LSS3","LSS4","LSS5","LSS6","LSS7","LSS8","LSS9","LSS10","MSS"],FS=["ok","kosong","kering","kotor"],ACS=["Dingin","Normal","Kurang dingin","Panas"],GL={ups:"UPS",dcp:"DC Panel (DCP)"},
+AZC=["N4022AG01","N4022AG02","N4022AG03","N4022AG04","N4022AG05","N4022AG06","N4022AG07"],CMC=["Analyzer Coal Mill 1","Analyzer Coal Mill 2"],AR=["Analyzer Preheater","Analyzer Coal Mill"];
+function newEl(){return{l:"LSS1",v:"",ah:"",p:""}}
+function nextCode(l,list){var u=l.map(function(r){return r.code});for(var i=0;i<list.length;i++)if(u.indexOf(list[i])<0)return list[i];return list[0]}
+function newAz(){return{code:nextCode(S.att.az,AZC),co:"",no:"",o2:"",dust:"",hf:"",tr:"",so2:"",wt:"ok",af:"ok",pf:"ok",fl:"",ac:"Dingin",ot:""}}
+function newCm(){return{code:nextCode(S.att.cm,CMC),ico:"",io2:"",oco:"",oo2:"",wt:"ok",af:"ok",pf:"ok",fl:"",ac:"Dingin",ot:""}}
+function normAreas(a){var o=a.areas,r=o&&typeof o==="object"?{pre:!!o.pre,cm:!!o.cm}:(/coal/i.test(a.area||"")?{pre:false,cm:true}:{pre:true,cm:false});if(!r.pre&&!r.cm)r.pre=true;return r}
+function normAtt(a){a=a||{};var t=function(x){return x==null?"":String(x)};
+ var r={on:!!a.on,type:/^(electric|instrument)$/.test(a.type)?a.type:"",areas:normAreas(a),ups:[],dcp:[],az:[],cm:[]};
+ ["ups","dcp"].forEach(function(k){(a[k]||[]).forEach(function(x){r[k].push({l:LOC.indexOf(x.l)>-1?x.l:"LSS1",v:t(x.v),ah:t(x.ah),p:t(x.p)})})});
+ (a.az||[]).forEach(function(x){r.az.push({code:t(x.code)||AZC[0],co:t(x.co),no:t(x.no),o2:t(x.o2),dust:t(x.dust),hf:t(x.hf),tr:t(x.tr),so2:t(x.so2),wt:x.wt||"ok",af:x.af||"ok",pf:x.pf||"ok",fl:t(x.fl),ac:x.ac||"Dingin",ot:t(x.ot)})});
+ (a.cm||[]).forEach(function(x){r.cm.push({code:t(x.code)||CMC[0],ico:t(x.ico),io2:t(x.io2),oco:t(x.oco),oo2:t(x.oo2),wt:x.wt||"ok",af:x.af||"ok",pf:x.pf||"ok",fl:t(x.fl),ac:x.ac||"Dingin",ot:t(x.ot)})});
+ return r}
+function norm(o){var r={date:o.date||today(),shift:/^[ABC]$/.test(o.shift)?o.shift:"B",by:o.by||"",rows:[],att:normAtt(o.att)};
+ (o.rows||[]).forEach(function(x){r.rows.push({s:nt(x.s),f:nt(x.f),iac:x.iac||"",trouble:x.trouble||"",action:x.action||"",cat:/^[ABC]$/.test(x.cat)?x.cat:""})});
+ if(!r.rows.length)r.rows=[blank()];return r}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{var v=localStorage.getItem(KEY);if(v)S=norm(JSON.parse(v))}catch(e){}if(!S.date)S.date=today();if(!S.rows.length)S.rows=[blank()];if(!S.att)S.att=normAtt({})}
+function toast(msg,label,fn){$("tmsg").textContent=msg;var b=$("tact");b.hidden=!label;if(label){b.textContent=label;b.onclick=function(){$("toast").classList.remove("show");fn()}}
+ $("toast").classList.add("show");clearTimeout(TT);TT=setTimeout(function(){$("toast").classList.remove("show")},label?6000:3000)}
+
+/* ----- Form ----- */
+function sumTime(r){return(r.s||r.f)?(tm(r.s)||"--.--")+" – "+(tm(r.f)||"--.--"):"Tanpa jam"}
+function sumDesc(r){var a=fl(r.iac),b=fl(r.trouble).replace(/^[-–]\s*/,"");return[a,b].filter(Boolean).join(" · ")||"Ketuk untuk mengisi"}
+function entryHtml(r,i){
+ var o=OPEN===i;
+ return'<article class="card entry'+(o?" open":"")+'">'+
+ '<button type="button" class="eh" data-tg="'+i+'" aria-expanded="'+o+'"><span class="no">'+(i+1)+'</span><span class="sm"><b data-s="t'+i+'">'+esc(sumTime(r))+'</b><small data-s="d'+i+'">'+esc(sumDesc(r))+'</small></span><span class="chev">▾</span></button>'+
+ '<div class="eb"><div class="row2 f"><div><label>Start</label><input type="time" data-i="'+i+'" data-k="s" value="'+esc(r.s)+'"></div>'+
+ '<div><label>Finish</label><input type="time" data-i="'+i+'" data-k="f" value="'+esc(r.f)+'"></div></div>'+
+ '<div class="f"><label>IAC Code</label><textarea rows="2" data-i="'+i+'" data-k="iac" placeholder="mis. N5063SV02">'+esc(r.iac)+'</textarea></div>'+
+ '<div class="f"><label>Trouble Description</label><textarea rows="3" data-i="'+i+'" data-k="trouble" placeholder="Masalah / permintaan">'+esc(r.trouble)+'</textarea></div>'+
+ '<div class="f"><label>Action</label><textarea rows="3" data-i="'+i+'" data-k="action" placeholder="Tindakan yang dilakukan (kata FU / follow up disorot kuning)">'+esc(r.action)+'</textarea></div>'+
+ '<div class="f"><label>Category</label><div class="seg">'+["A","B","C"].map(function(c){return'<button type="button" data-cat="'+c+'" data-i="'+i+'" aria-pressed="'+(r.cat===c)+'">'+c+'</button>'}).join("")+'</div>'+
+ '<p class="note">A = Down Plant · B = Down Equipment · C = Running. Ketuk lagi untuk mengosongkan.</p></div>'+
+ '<div class="acts"><button type="button" data-dup="'+i+'">Duplikat</button><button type="button" class="del" data-del="'+i+'">Hapus</button></div></div></article>'}
+function grow(t){t.style.height="auto";t.style.height=(t.scrollHeight+2)+"px"}
+function buildHead(){$("date").value=S.date;$("dayl").textContent=fmtDate(S.date);$("by").value=S.by;
+ [].forEach.call(document.querySelectorAll("#shiftSeg button"),function(b){b.setAttribute("aria-pressed",b.dataset.sh===S.shift)})}
+function buildForm(){$("rows").innerHTML=S.rows.map(entryHtml).join("");[].forEach.call(document.querySelectorAll("#rows .open textarea"),grow)}
+
+/* ----- Laporan (tampilan sama seperti sebelumnya) ----- */
+function buildPaper(){
+ var n=S.rows.length,body="";
+ S.rows.forEach(function(r,i){
+  body+="<tr>"+(i===0?'<td class="c big" rowspan="'+(n+1)+'">'+esc(S.shift)+"</td>":"")+
+   '<td class="c">'+esc(tm(r.s))+'</td><td class="c">'+esc(tm(r.f))+"</td><td>"+esc(r.iac)+"</td><td>"+esc(r.trouble)+"</td>"+actc(r.action)+
+   (i===0?'<td class="c" rowspan="'+(n+1)+'">'+esc(S.by)+"</td>":"")+
+   '<td class="c" style="font-size:14px;font-weight:600">'+esc(r.cat)+"</td></tr>";
+ });
+ body+='<tr class="last"><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+ $("paper").innerHTML=
+ '<div class="rh"><div style="width:300px"></div><div class="rtitle">SHIFT REPORT<br>ELECTRICAL DEPARTMENT - P14</div>'+
+ '<div class="rdate" style="margin-left:auto">Day &amp; Date :<span>'+esc(fmtDate(S.date))+'</span></div></div>'+
+ '<table class="rt"><colgroup><col style="width:5%"><col style="width:5.5%"><col style="width:5.5%"><col style="width:13%"><col style="width:28%"><col style="width:29%"><col style="width:8%"><col style="width:6%"></colgroup>'+
+ '<thead><tr><th rowspan="2">SHIFT</th><th colspan="2">HOURS</th><th rowspan="2">IAC Code</th><th rowspan="2">Trouble Description</th><th rowspan="2">Action</th><th rowspan="2">Done By</th><th rowspan="2">Category*</th></tr>'+
+ '<tr><th>Start</th><th>Finish</th></tr></thead><tbody>'+body+'</tbody></table>'+
+ '<div class="legend"><b>Remark</b><span>A =</span><span>Down Plant</span><span></span><span>B =</span><span>Down Equipment</span><span></span><span>C =</span><span>Running</span></div>';
+ fit();
+}
+function fit(){var f=$("fit"),s=$("scaler"),p=$("paper"),w=f.clientWidth;if(!w)return;
+ var k=ZOOM?1:Math.min(1,w/1120);s.style.transform="scale("+k+")";f.style.height=Math.ceil(s.offsetHeight*k)+"px";f.style.overflowX=ZOOM?"auto":"hidden"}
+function render(){buildHead();buildForm();buildAtt();buildPaper();buildPaper2();save()}
+
+/* ----- Interaksi ----- */
+function sumUpd(i){var r=S.rows[i],a=document.querySelector('[data-s="t'+i+'"]'),b=document.querySelector('[data-s="d'+i+'"]');if(a)a.textContent=sumTime(r);if(b)b.textContent=sumDesc(r)}
+$("rows").addEventListener("input",function(e){var t=e.target,i=t.dataset.i;if(i==null)return;
+ var v=t.value;S.rows[i][t.dataset.k]=v;if(t.tagName==="TEXTAREA")grow(t);sumUpd(+i);buildPaper();save()});
+$("rows").addEventListener("click",function(e){
+ var b=e.target.closest("button");if(!b)return;var d=b.dataset;
+ if(d.tg!=null){var i=+d.tg;OPEN=OPEN===i?-1:i;buildForm();if(OPEN===i)document.querySelectorAll("#rows .entry")[i].scrollIntoView({block:"nearest",behavior:"smooth"});return}
+ if(d.cat){var r=S.rows[+d.i];r.cat=r.cat===d.cat?"":d.cat;[].forEach.call(b.parentNode.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x.dataset.cat===r.cat)});buildPaper();save();return}
+ if(d.dup!=null){var j=+d.dup;S.rows.splice(j+1,0,JSON.parse(JSON.stringify(S.rows[j])));OPEN=j+1;render();toast("Kegiatan diduplikat");return}
+ if(d.del!=null){var k=+d.del,snap=JSON.stringify(S);S.rows.splice(k,1);if(!S.rows.length)S.rows=[blank()];OPEN=-1;render();
+  toast("Kegiatan dihapus","Urungkan",function(){S=JSON.parse(snap);OPEN=-1;render()})}
+});
+$("add").onclick=function(){S.rows.push(blank());OPEN=S.rows.length-1;render();var l=document.querySelectorAll("#rows .entry");l[l.length-1].scrollIntoView({block:"center",behavior:"smooth"})};
+$("date").addEventListener("input",function(e){S.date=e.target.value;$("dayl").textContent=fmtDate(S.date);buildPaper();save()});
+$("by").addEventListener("input",function(e){S.by=e.target.value;buildPaper();save()});
+$("shiftSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;S.shift=b.dataset.sh;buildHead();buildPaper();save()});
+
+
+/* ----- Lampiran ----- */
+var SAMPLE_ATT={on:true,type:"electric",areas:{pre:true,cm:true},ups:[{l:"LSS4"},{l:"LSS5"},{l:"LSS6"}],dcp:[{l:"LSS4",v:"110",ah:"125",p:"100"},{l:"LSS5",v:"110",ah:"125",p:"100"},{l:"LSS6",v:"110",ah:"125",p:"100"}],
+ az:[{code:"N4022AG01",co:"0.13",no:"362",o2:"2.16",wt:"kosong",af:"kosong",pf:"ok",fl:"60",ac:"Dingin"},{code:"N4022AG02",co:"0.10",no:"328",o2:"2.65",wt:"kosong",af:"kosong",pf:"ok",fl:"60",ac:"Dingin"}],
+ cm:[{code:"Analyzer Coal Mill 1",ico:"20",io2:"5.1",oco:"614",oo2:"10.5",wt:"kosong",af:"kering",pf:"ok",fl:"60",ac:"Dingin"},{code:"Analyzer Coal Mill 2",ico:"97",io2:"7.4",oco:"289",oo2:"11.3",wt:"kosong",af:"kering",pf:"ok",fl:"60",ac:"Dingin",ot:"Glass flow inlet mill retak"}]};
+function cl(l,v){return v&&l.indexOf(v)<0?l.concat(v):l}
+function opts(l,v){return l.map(function(x){return'<option'+(x===v?" selected":"")+'>'+x+'</option>'}).join("")}
+function lbl(t,h){return'<div><label>'+t+'</label>'+h+'</div>'}
+function inp(g,i,k,v,ph){return'<input data-g="'+g+'" data-i="'+i+'" data-k="'+k+'" value="'+esc(v)+'" placeholder="'+(ph||"")+'" inputmode="'+(ph&&/^[\d.]+$/.test(ph)?"decimal":"text")+'">'}
+function sel(g,i,k,l,v){return'<select data-g="'+g+'" data-i="'+i+'" data-k="'+k+'">'+opts(cl(l,v),v)+'</select>'}
+function hd(t,g,i){return'<div class="hd"><span>'+t+'</span><button class="mini del" type="button" data-rm="'+g+':'+i+'">Hapus</button></div>'}
+function panel(g,i,r){return'<div class="row3 f">'+lbl("Water trap",sel(g,i,"wt",FS,r.wt))+lbl("Acid filter",sel(g,i,"af",FS,r.af))+lbl("Paper filter",sel(g,i,"pf",FS,r.pf))+'</div>'+
+ '<div class="row2 f">'+lbl("Flow gas (L/h)",inp(g,i,"fl",r.fl,"60"))+lbl("Kondisi AC ruangan",sel(g,i,"ac",ACS,r.ac))+'</div>'+
+ '<div class="f"><label>Temuan masalah lain</label><textarea rows="2" data-g="'+g+'" data-i="'+i+'" data-k="ot" placeholder="Kosongkan jika tidak ada">'+esc(r.ot)+'</textarea></div>'}
+function elSec(k){var h='<div class="sub"><div class="hd"><span>'+GL[k]+'</span><button type="button" class="mini" data-add="'+k+'">+ Baris</button></div>';
+ S.att[k].forEach(function(r,i){h+='<div class="mrow"><div class="rowd"><div>'+sel(k,i,"l",LOC,r.l)+'</div><button type="button" class="mini del" data-rm="'+k+':'+i+'">Hapus</button></div><div class="row3">'+
+  lbl("Tegangan (V)",inp(k,i,"v",r.v,"110"))+lbl("Kapasitas (Ah)",inp(k,i,"ah",r.ah,"125"))+lbl("Kapasitas Baterai (%)",inp(k,i,"p",r.p,"100"))+'</div></div>'});
+ if(!S.att[k].length)h+='<p class="note">Belum ada baris. Ketuk + Baris.</p>';
+ return h+'</div>'}
+function insBlock(g){var a=S.att,cm=g==="cm",h='<h3 class="ah">'+AR[cm?1:0]+'</h3>';
+ a[g].forEach(function(r,i){h+='<div class="sub">'+hd("Analyzer "+(i+1),g,i)+'<div class="f"><label>Kode analyzer</label>'+sel(g,i,"code",cm?CMC:AZC,r.code)+'</div>';
+  if(cm)h+='<p class="sh">Inlet mill</p><div class="row2 f">'+lbl("CO (ppm)",inp(g,i,"ico",r.ico,"20"))+lbl("O2 (%)",inp(g,i,"io2",r.io2,"5.1"))+'</div>'+
+   '<p class="sh">Outlet mill</p><div class="row2 f">'+lbl("CO (ppm)",inp(g,i,"oco",r.oco,"614"))+lbl("O2 (%)",inp(g,i,"oo2",r.oo2,"10.5"))+'</div><p class="sh">Kondisi panel</p>';
+  else h+='<div class="row3 f">'+lbl("CO (%)",inp(g,i,"co",r.co,"0.13"))+lbl("NO (ppm)",inp(g,i,"no",r.no,"362"))+lbl("O2 (%)",inp(g,i,"o2",r.o2,"2.16"))+'</div>'+
+   '<div class="row2 f">'+lbl("Dust (mg/m³)",inp(g,i,"dust",r.dust,"5"))+lbl("HF (mg/m³)",inp(g,i,"hf",r.hf,"1"))+'</div><div class="row2 f">'+lbl("TR (%)",inp(g,i,"tr",r.tr,"90"))+lbl("SO2 (mg/m³)",inp(g,i,"so2",r.so2,"10"))+'</div><p class="sh">Kondisi panel</p>';
+  h+=panel(g,i,r)+'</div>'});
+ return h+'<button type="button" class="mini" data-add="'+g+'" style="width:100%;min-height:46px">+ Tambah analyzer</button>'}
+function insSec(){var a=S.att,h='<div class="f"><label>Area analyzer (boleh pilih keduanya)</label><div class="seg">'+[["pre",AR[0]],["cm",AR[1]]].map(function(x){return'<button type="button" data-ar="'+x[0]+'" aria-pressed="'+a.areas[x[0]]+'">'+x[1]+'</button>'}).join("")+'</div></div>';
+ if(a.areas.pre)h+=insBlock("az");if(a.areas.cm)h+=insBlock("cm");return h}
+function buildAtt(){var a=S.att,h='<div class="f"><label>Tambah lampiran?</label><div class="seg"><button type="button" data-on="0" aria-pressed="'+!a.on+'">Tidak</button><button type="button" data-on="1" aria-pressed="'+a.on+'">Ya</button></div></div>';
+ if(a.on){h+='<div class="f"><label>Jenis lampiran</label><div class="seg"><button type="button" data-ty="electric" aria-pressed="'+(a.type==="electric")+'">Electric</button><button type="button" data-ty="instrument" aria-pressed="'+(a.type==="instrument")+'">Instrument</button></div>'+(a.type?"":'<p class="note">Pilih Electric atau Instrument untuk melanjutkan.</p>')+'</div>';
+  if(a.type==="electric")h+=elSec("ups")+elSec("dcp");
+  if(a.type==="instrument")h+=insSec();
+  if(a.type)h+='<p class="note">Lampiran dibuat sebagai halaman terpisah dari shift report. Kosongkan isian bila tidak ada data (tampil "-").</p>'}
+ else h+='<p class="note">Pilih Ya untuk menambah halaman lampiran Electric atau Instrument.</p>';
+ $("att").innerHTML=h;[].forEach.call(document.querySelectorAll("#att textarea"),grow)}
+function u(v,s){v=String(v||"").trim();return v?(/^[\d.,]+$/.test(v)?v+s:v):"-"}
+function dash(v){v=String(v||"").trim();return v||"-"}
+function otc(v){v=String(v||"").trim();return'<td style="text-align:left'+(v?";background:#ffe600;font-weight:700":"")+'">'+esc(v||"-")+"</td>"}
+function actc(v){var hit=/\bfu\b|follow[\s-]*up/i.test(v||"");return"<td"+(hit?' style="background:#ffe600;font-weight:700"':"")+">"+esc(v)+"</td>"}
+function td(x,c){return"<td"+(c?' class="'+c+'"':"")+">"+esc(x)+"</td>"}
+function cols(a){return"<colgroup>"+a.map(function(w){return'<col style="width:'+w+'%">'}).join("")+"</colgroup>"}
+function buildPaper2(){
+ var a=S.att,el=$("paper2"),show=a.on&&a.type;el.style.display=show?"":"none";$("scaler").classList.toggle("merged",!!show);
+ if(!show){fit();return}
+ var ins=a.type==="instrument",tb="";
+ var head='<div class="rh"><div style="width:300px"></div><div class="rtitle">LAMPIRAN<br>'+(ins?"DATA LAPORAN ANALYZER P14":"DATA UPS &amp; DC PANEL - P14")+'</div>'+
+  '<div class="rdate" style="margin-left:auto">Day &amp; Date :<span>'+esc(fmtDate(S.date))+'</span><div style="margin-top:6px">Shift :<span>'+esc(S.shift)+'</span></div></div></div>';
+ if(!ins){var rows="";
+  [["ups","UPS"],["dcp","DCP"]].forEach(function(x){var L=a[x[0]];L.forEach(function(r,i){rows+="<tr>"+(i===0?'<td class="b" rowspan="'+L.length+'">'+x[1]+"</td>":"")+td(r.l)+td(dash(r.v))+td(dash(r.ah))+td(dash(r.p))+"</tr>"})});
+  if(!rows)rows='<tr><td colspan="5">Belum ada data</td></tr>';
+  tb='<table class="rt grid">'+cols([16,18,22,22,22])+'<thead><tr><th>Equipment</th><th>Lokasi</th><th>Tegangan (V)</th><th>Kapasitas (Ah)</th><th>Kapasitas Baterai (%)</th></tr></thead><tbody>'+rows+'</tbody></table>'}
+ else{if(a.areas.pre){var n=14,r2='<tr><td class="b" colspan="'+n+'" style="text-align:left">('+esc(AR[0])+')</td></tr>';
+  a.az.forEach(function(r){r2+="<tr>"+td(dash(r.code),"b")+td(u(r.co," %"))+td(u(r.no," ppm"))+td(u(r.o2," %"))+td(u(r.dust," mg/m³"))+td(u(r.hf," mg/m³"))+td(u(r.tr," %"))+td(u(r.so2," mg/m³"))+td(r.wt)+td(r.af)+td(r.pf)+td(u(r.fl," L/h"))+td(r.ac)+otc(r.ot)+"</tr>"});
+  if(!a.az.length)r2+='<tr><td colspan="'+n+'">Belum ada data</td></tr>';
+  tb+='<table class="rt grid">'+cols([10,6,7,6,7,6,5,7,7,7,7,7,8,10])+'<thead><tr><th rowspan="2">Kode Analyzer</th><th rowspan="2">CO</th><th rowspan="2">NO</th><th rowspan="2">O2</th><th rowspan="2">Dust</th><th rowspan="2">HF</th><th rowspan="2">TR</th><th rowspan="2">SO2</th><th colspan="4">Kondisi Panel</th><th rowspan="2">Kondisi AC Ruangan</th><th rowspan="2">Temuan Masalah Lain</th></tr><tr><th>Water trap</th><th>Acid filter</th><th>Paper filter</th><th>Flow gas</th></tr></thead><tbody>'+r2+'</tbody></table>'}
+  if(a.areas.cm){var n2=11,r3='<tr><td class="b" colspan="'+n2+'" style="text-align:left">('+esc(AR[1])+')</td></tr>';
+  a.cm.forEach(function(r){r3+="<tr>"+td(dash(r.code),"b")+td(u(r.ico," ppm"))+td(u(r.io2," %"))+td(u(r.oco," ppm"))+td(u(r.oo2," %"))+td(r.wt)+td(r.af)+td(r.pf)+td(u(r.fl," L/h"))+td(r.ac)+otc(r.ot)+"</tr>"});
+  if(!a.cm.length)r3+='<tr><td colspan="'+n2+'">Belum ada data</td></tr>';
+  tb+='<table class="rt grid">'+cols([14,7,6,7,6,8,8,8,8,10,18])+'<thead><tr><th rowspan="2">Analyzer</th><th colspan="2">Inlet Mill</th><th colspan="2">Outlet Mill</th><th colspan="4">Kondisi Panel</th><th rowspan="2">Kondisi AC Ruangan</th><th rowspan="2">Temuan Masalah Lain</th></tr><tr><th>CO</th><th>O2</th><th>CO</th><th>O2</th><th>Water trap</th><th>Acid filter</th><th>Paper filter</th><th>Flow gas</th></tr></thead><tbody>'+r3+'</tbody></table>'}}
+ el.innerHTML=head+tb;fit()}
+$("att").addEventListener("input",function(e){var t=e.target,g=t.dataset.g;if(!g)return;
+ S.att[g][+t.dataset.i][t.dataset.k]=t.value;if(t.tagName==="TEXTAREA")grow(t);buildPaper2();save()});
+$("att").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var d=b.dataset,a=S.att;
+ function seed(){if(a.type==="electric"&&!a.ups.length&&!a.dcp.length){a.ups.push(newEl());a.dcp.push(newEl())}
+  if(a.type==="instrument"){if(a.areas.pre&&!a.az.length)a.az.push(newAz());if(a.areas.cm&&!a.cm.length)a.cm.push(newCm())}}
+ if(d.on!=null)a.on=d.on==="1";
+ else if(d.ty){a.type=d.ty;seed()}
+ else if(d.ar){var o=a.areas;if(o[d.ar]&&!(o.pre&&o.cm)){toast("Minimal satu area harus dipilih");return}o[d.ar]=!o[d.ar];seed()}
+ else if(d.add)a[d.add].push(d.add==="az"?newAz():d.add==="cm"?newCm():newEl());
+ else if(d.rm){var p=d.rm.split(":");a[p[0]].splice(+p[1],1)}
+ else return;
+ buildAtt();buildPaper2();save()});
+
+/* Tab & menu */
+function setTab(t){document.body.dataset.tab=t;[].forEach.call(document.querySelectorAll(".tabbar button"),function(b){b.setAttribute("aria-selected",b.dataset.tab===t)});window.scrollTo(0,0);requestAnimationFrame(fit)}
+[].forEach.call(document.querySelectorAll(".tabbar button"),function(b){b.onclick=function(){setTab(b.dataset.tab)}});
+$("menuBtn").onclick=function(e){e.stopPropagation();$("menu").classList.toggle("show")};
+document.addEventListener("click",function(e){if(!e.target.closest("#menu"))$("menu").classList.remove("show")});
+$("zoomBtn").onclick=function(){ZOOM=!ZOOM;this.textContent=ZOOM?"Muat layar":"Ukuran asli";fit()};
+window.addEventListener("resize",fit);
+if(window.ResizeObserver)new ResizeObserver(fit).observe($("fit"));
+
+/* Unduh */
+function saveFile(name,blob){
+ if(DL)return DL.save({filename:name,data:blob}).catch(function(e){if(e&&e.code!=="declined")toast("Gagal menyimpan: "+(e.message||e.code))});
+ var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();return Promise.resolve()}
+function cap(){return html2canvas($("scaler"),{scale:2,backgroundColor:"#ffffff",useCORS:true,scrollX:0,scrollY:-window.scrollY,
+ onclone:function(doc){var s=doc.getElementById("scaler"),f=doc.getElementById("fit");s.style.transform="none";s.style.boxShadow="none";f.style.height="auto";f.style.overflow="visible";
+  [].forEach.call(doc.querySelectorAll(".paper"),function(x){x.style.boxShadow="none"})}})}
+function exportImg(ext,btn){
+ var name="shift-report-"+S.date,type=ext==="png"?"image/png":"image/jpeg";
+ if(!window.html2canvas||(ext==="pdf"&&!(window.jspdf&&window.jspdf.jsPDF))){toast("Pustaka unduhan belum termuat. Periksa koneksi lalu coba lagi.");return}
+ var old=btn.textContent;btn.textContent="Memproses…";btn.disabled=true;
+ var done=function(){btn.textContent=old;btn.disabled=false};
+ (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(cap).then(function(c){
+  if(ext==="pdf"){var W=c.width,H=c.height,por=H/W>0.9,pw=por?210:297,ph=por?297:210,m=8,k=Math.min((pw-2*m)/W,(ph-2*m)/H),w=W*k,
+   pdf=new window.jspdf.jsPDF({orientation:por?"portrait":"landscape",unit:"mm",format:"a4"});
+   pdf.addImage(c.toDataURL("image/jpeg",0.95),"JPEG",(pw-w)/2,m,w,H*k);done();return saveFile(name+".pdf",pdf.output("blob"))}
+  return new Promise(function(r){c.toBlob(r,type,0.95)}).then(function(b){done();return b?saveFile(name+"."+ext,b):null})
+ }).catch(function(){done();toast("Gagal membuat file unduhan.")})}
+function closeDl(){$("dlMenu").classList.remove("show");$("dlBtn").setAttribute("aria-expanded","false")}
+$("dlBtn").onclick=function(e){e.stopPropagation();var m=$("dlMenu"),o=m.classList.contains("show");closeDl();if(!o){m.classList.add("show");this.setAttribute("aria-expanded","true")}};
+$("dlMenu").onclick=function(e){var x=e.target.closest("button");if(!x)return;closeDl();exportImg(x.dataset.fmt,$("dlBtn"))};
+document.addEventListener("click",function(e){if(!e.target.closest(".exports"))closeDl()});
+
+/* Menu aksi */
+function swap(n,msg){var prev=S;S=n;OPEN=-1;render();toast(msg,"Urungkan",function(){S=prev;render()})}
+$("reset").onclick=function(){$("menu").classList.remove("show");swap(norm({}),"Semua data dikosongkan")};
+$("json").onclick=function(){$("menu").classList.remove("show");saveFile("shift-report-"+S.date+".json",new Blob([JSON.stringify(S,null,1)],{type:"application/json"}))};
+$("load").onclick=function(){$("menu").classList.remove("show");$("file").click()};
+$("file").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(o&&o.rows)swap(norm(o),"Data dibuka");else toast("Format file tidak sesuai.")}catch(x){toast("File tidak dapat dibaca.")}};r.readAsText(f);e.target.value=""};
+$("sample").onclick=function(){$("menu").classList.remove("show");swap(norm({date:"2026-11-02",shift:"B",by:"Heri Yadi",att:SAMPLE_ATT,rows:[
+ {s:"15:10",f:"15:30",iac:"N5063SV02",trouble:"- Info CCR trip",action:"- di reset saja di MCC, oke Ready"},
+ {s:"15:30",f:"15:40",iac:"N5063RA02"},
+ {s:"16:30",f:"16:40",iac:"RDF POS 10",trouble:"- Info CCR trip",action:"- alarm \"VFD Fault\" di reset saja\n  oke Ready"},
+ {s:"16:50",f:"17:00",iac:"N3011BC02",trouble:"- Info CCR minta di Readykan",action:"- di reset saja di MCC, oke Ready"},
+ {s:"17:15",f:"17:30",iac:"N0662RM01\n—//— FN02\n—//— FN03",trouble:"- Prod mau lepas LOTOTO",action:"- Prod & E lepas LOTOTO, Readykan equipment sampai CCR terima Ready"},
+ {s:"14:45",f:"18:00",iac:"N5063MD01\n—//— SR01",trouble:"- Info CCR mau di LOTOTO",action:"- Rack out Switchgear & OFF Sinamic\n  Prod & E Pasang LOTOTO, setelah pekerjaan Prod selesai LOTOTO di lepas lagi dan di Readykan lagi"},
+ {s:"22:00",f:"22:15",iac:"N5063FN05",trouble:"- Prod minta sekalian di Readykan"},
+ {s:"20:10",f:"20:30",iac:"N0683CR01 (Deballer)",trouble:"- Info CCR mau di LOTOTO mau ada pekerjaan Cleaning",action:"- OFF breaker, PT. MPS & E Pasang LOTOTO di MCC"},
+ {iac:"Routine Job",trouble:"- Cek temp. ruangan, level battery, FS, Pintu, UPS & DC Panel LSS 7 - 10\n*NOTE: LSS 10 Lt. bawah kurang dingin, AU 16 & 20 kurang dingin",action:"- Temp. ruangan normal, level battry aman, FS Auto, Pintu terkunci\nLSS 7: 218V 100% / 110V 125AL 100%\nLSS 8: 223V 100%\nLSS 9: 111V 125AL 100%\nLSS 10: 217V 100% / 111V 125AL 100%"}]}),"Contoh data dimuat")};
+
+load();if(S.rows.length===1)OPEN=0;render();
+</script>
+</body>
+</html>
