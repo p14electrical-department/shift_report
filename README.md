@@ -20,7 +20,7 @@ IBM Plex Sans dari Google Fonts, sehingga memerlukan koneksi internet.
 
 ## Unggah otomatis ke Supabase Storage
 Setiap kali tombol **Unduh File** dipakai, file hasil unduhan juga diunggah ke Supabase Storage
-di folder sesuai tanggal laporan, contoh: `shift-reports/02-11-2026/shift-report-2026-11-02-shiftB-153012.pdf`.
+di folder sesuai tanggal laporan, contoh: `shift-reports/02-11-2026/Shift B Report-02112026-153012.pdf`.
 
 ### Persiapan di Supabase
 1. Buat bucket (Storage → New bucket), misalnya `shift-reports`. Disarankan **Private**.

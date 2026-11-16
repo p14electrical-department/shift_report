@@ -375,24 +375,25 @@ var SBD={url:"https://vcbjaxpkmqhenaeaenys.supabase.co",key:"sb_publishable_w5Mm
 function sbCfg(){return{url:String(SBD.url).trim().replace(/\/rest\/v1\/?$/,"").replace(/\/+$/,""),key:SBD.key,bucket:SBD.bucket}}
 function sbReady(c){return /^https?:\/\//.test(c.url||"")&&!!c.key&&!!c.bucket}
 function sbNote(){var c=sbCfg();$("sbNote").textContent=sbReady(c)?"☁ Unggah otomatis aktif: file tersimpan di Supabase pada folder tanggal laporan (DD-MM-YYYY).":""}
+function baseName(){var d=(S.date||today()).split("-"),t=new Date();return"Shift "+S.shift+" Report-"+d[2]+d[1]+d[0]+"-"+pad(t.getHours())+pad(t.getMinutes())+pad(t.getSeconds())}
 function sbHead(c,blob){var h={apikey:c.key,"Content-Type":blob.type||"application/octet-stream","x-upsert":"false"};if(!/^sb_/.test(c.key))h.Authorization="Bearer "+c.key;return h}
-function sbUp(ext,blob){
+function sbUp(name,blob){
  var c=sbCfg();if(!sbReady(c))return Promise.resolve(null);
- var d=S.date||today(),f=d.split("-").reverse().join("-"),t=new Date(),path=f+"/shift-report-"+d+"-shift"+S.shift+"-"+pad(t.getHours())+pad(t.getMinutes())+pad(t.getSeconds())+"."+ext;
+ var f=(S.date||today()).split("-").reverse().join("-"),path=f+"/"+name;
  toast("Mengunggah ke Supabase…");
- return fetch(c.url.replace(/\/+$/,"")+"/storage/v1/object/"+encodeURIComponent(c.bucket)+"/"+path,{method:"POST",headers:sbHead(c,blob),body:blob})
+ return fetch(c.url.replace(/\/+$/,"")+"/storage/v1/object/"+encodeURIComponent(c.bucket)+"/"+f+"/"+encodeURIComponent(name),{method:"POST",headers:sbHead(c,blob),body:blob})
  .then(function(r){if(!r.ok)return r.text().then(function(x){throw new Error(r.status+" "+x.slice(0,100))});toast("Tersimpan di Supabase: "+path)})
  .catch(function(e){var m=e&&e.message?e.message:"";toast("Gagal mengunggah ke Supabase. "+(/fetch|network|load failed/i.test(m)||!m?"Periksa koneksi dan pengaturan. Di link claude.ai koneksi keluar diblokir; gunakan versi GitHub Pages.":m))})}
 function exportImg(ext,btn){
- var name="shift-report-"+S.date,type=ext==="png"?"image/png":"image/jpeg";
+ var name=baseName(),type=ext==="png"?"image/png":"image/jpeg";
  if(!window.html2canvas||(ext==="pdf"&&!(window.jspdf&&window.jspdf.jsPDF))){toast("Pustaka unduhan belum termuat. Periksa koneksi lalu coba lagi.");return}
  var old=btn.textContent;btn.textContent="Memproses…";btn.disabled=true;
  var done=function(){btn.textContent=old;btn.disabled=false};
  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(cap).then(function(c){
   if(ext==="pdf"){var W=c.width,H=c.height,por=H/W>0.9,pw=por?210:297,ph=por?297:210,m=8,k=Math.min((pw-2*m)/W,(ph-2*m)/H),w=W*k,
    pdf=new window.jspdf.jsPDF({orientation:por?"portrait":"landscape",unit:"mm",format:"a4"});
-   pdf.addImage(c.toDataURL("image/jpeg",0.95),"JPEG",(pw-w)/2,m,w,H*k);var pb=pdf.output("blob");done();sbUp("pdf",pb);return saveFile(name+".pdf",pb)}
-  return new Promise(function(r){c.toBlob(r,type,0.95)}).then(function(b){done();if(!b)return null;sbUp(ext,b);return saveFile(name+"."+ext,b)})
+   pdf.addImage(c.toDataURL("image/jpeg",0.95),"JPEG",(pw-w)/2,m,w,H*k);var pb=pdf.output("blob");done();sbUp(name+".pdf",pb);return saveFile(name+".pdf",pb)}
+  return new Promise(function(r){c.toBlob(r,type,0.95)}).then(function(b){done();if(!b)return null;sbUp(name+"."+ext,b);return saveFile(name+"."+ext,b)})
  }).catch(function(){done();toast("Gagal membuat file unduhan.")})}
 function closeDl(){$("dlMenu").classList.remove("show");$("dlBtn").setAttribute("aria-expanded","false")}
 $("dlBtn").onclick=function(e){e.stopPropagation();var m=$("dlMenu"),o=m.classList.contains("show");closeDl();if(!o){m.classList.add("show");this.setAttribute("aria-expanded","true")}};
