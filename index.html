@@ -200,7 +200,7 @@ main{display:block;padding:0}
  <h3 id="sbt">Pengaturan Supabase</h3>
  <p class="note" style="margin:0 0 14px">Setiap kali Unduh File dipakai, file otomatis diunggah ke Supabase Storage dalam folder bertanggal laporan (YYYY-MM-DD).</p>
  <div class="f"><label class="chk"><input type="checkbox" id="sbOn"> Aktifkan unggah otomatis</label></div>
- <div class="f"><label for="sbUrl">Project URL</label><input id="sbUrl" type="url" placeholder="https://xxxx.supabase.co" autocomplete="off"></div>
+ <div class="f"><label for="sbUrl">Project URL</label><input id="sbUrl" type="url" placeholder="https://vcbjaxpkmqhenaeaenys.supabase.co" autocomplete="off"></div>
  <div class="f"><label for="sbKey">Anon (public) key</label><input id="sbKey" type="password" placeholder="eyJ…" autocomplete="off"></div>
  <div class="f"><label for="sbBucket">Nama bucket</label><input id="sbBucket" placeholder="shift-reports" autocomplete="off"></div>
  <p class="note" id="sbMsg"></p>
@@ -402,7 +402,7 @@ function sbUp(ext,blob){
  toast("Mengunggah ke Supabase…");
  return fetch(c.url.replace(/\/+$/,"")+"/storage/v1/object/"+encodeURIComponent(c.bucket)+"/"+path,{method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":blob.type||"application/octet-stream","x-upsert":"false"},body:blob})
  .then(function(r){if(!r.ok)return r.text().then(function(x){throw new Error(r.status+" "+x.slice(0,100))});toast("Tersimpan di Supabase: "+path)})
- .catch(function(e){var m=e&&e.message?e.message:"";toast("Gagal mengunggah ke Supabase. "+(/fetch|network|load failed/i.test(m)||!m?"Periksa koneksi dan pengaturan. Di link claude.ai koneksi keluar diblokir; gunakan versi GitHub Pages.":m))})}
+ .catch(function(e){var m=e&&e.message?e.message:"";toast("Gagal mengunggah ke Supabase. "+(/fetch|network|load failed/i.test(m)||!m?"Periksa koneksi dan mohon infokan kepada engineer terkait. Terima kasih.":m))})}
 function exportImg(ext,btn){
  var name="shift-report-"+S.date,type=ext==="png"?"image/png":"image/jpeg";
  if(!window.html2canvas||(ext==="pdf"&&!(window.jspdf&&window.jspdf.jsPDF))){toast("Pustaka unduhan belum termuat. Periksa koneksi lalu coba lagi.");return}
@@ -440,7 +440,7 @@ $("sbBtn").onclick=function(){$("menu").classList.remove("show");var c=sbCfg();$
 $("sbClose").onclick=function(){$("sbm").classList.remove("show")};
 $("sbm").addEventListener("click",function(e){if(e.target===this)this.classList.remove("show")});
 $("sbSave").onclick=function(){var v={on:$("sbOn").checked,url:$("sbUrl").value.trim(),key:$("sbKey").value.trim(),bucket:$("sbBucket").value.trim()||"shift-reports"};
- if(v.on&&!/^https?:\/\//.test(v.url)){$("sbMsg").textContent="Isi Project URL yang valid, mis. https://xxxx.supabase.co";return}
+ if(v.on&&!/^https?:\/\//.test(v.url)){$("sbMsg").textContent="Isi Project URL yang valid, mis. https://vcbjaxpkmqhenaeaenys.supabase.co";return}
  if(v.on&&!v.key){$("sbMsg").textContent="Anon key belum diisi.";return}
  try{localStorage.setItem(SBK,JSON.stringify(v))}catch(e){}
  sbNote();$("sbm").classList.remove("show");toast(v.on?"Pengaturan Supabase disimpan":"Unggah otomatis dinonaktifkan")};
