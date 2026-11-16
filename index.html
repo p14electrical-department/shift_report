@@ -84,6 +84,16 @@ select{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--
 .zoomrow button{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 12px;min-height:36px}
 #fit{width:100%;overflow:hidden;border-radius:6px}
 #scaler{width:1120px;transform-origin:0 0}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.mbox{background:var(--card);color:var(--ink);border-radius:16px;padding:18px;width:100%;max-width:440px;max-height:92vh;overflow:auto}
+.mbox h3{margin:0 0 4px;font-size:17px}
+.mbox .f{margin-bottom:12px}
+.mbox .btns{display:flex;gap:8px;margin-top:14px}
+.mbox .btns button{flex:1;min-height:46px;border-radius:10px;border:1px solid var(--line);background:var(--field);font-weight:600}
+.mbox .btns .p{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.chk{display:flex;gap:10px;align-items:center;font-size:15px;color:var(--ink)}
+.chk input{width:22px;height:22px;min-height:0}
 /* Tab bawah (smartphone) */
 .tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px}
 .tabbar button{flex:1;min-height:52px;border:0;background:none;border-radius:12px;font-weight:600;font-size:14px;color:var(--mut)}
@@ -147,6 +157,7 @@ main{display:block;padding:0}
   <button id="reset" type="button">Kosongkan semua</button>
   <button id="json" type="button">Simpan data (.json)</button>
   <button id="load" type="button">Buka data (.json)</button>
+  <button id="sbBtn" type="button">Pengaturan Supabase</button>
  </div>
  <input type="file" id="file" accept=".json,application/json" hidden>
 </header>
@@ -172,6 +183,7 @@ main{display:block;padding:0}
     <div class="ex"><button id="dlBtn" type="button" class="p" aria-haspopup="true" aria-expanded="false">⬇ Unduh File ▾</button>
      <div class="dlmenu" id="dlMenu"><button type="button" data-fmt="png">Gambar PNG</button><button type="button" data-fmt="jpg">Gambar JPG</button><button type="button" data-fmt="pdf">Dokumen PDF</button></div></div>
    </div>
+   <p class="note noprint" id="sbNote" style="margin:-4px 0 10px"></p>
    <div class="zoomrow noprint"><span>Pratinjau laporan</span><button id="zoomBtn" type="button">Ukuran asli</button></div>
    <div id="fit"><div id="scaler"><div class="paper" id="paper"></div><div class="paper" id="paper2" style="display:none"></div></div></div>
   </div>
@@ -184,6 +196,16 @@ main{display:block;padding:0}
 </nav>
 <div class="toast" id="toast" role="status"><span id="tmsg"></span><button id="tact" type="button" hidden></button></div>
 
+<div class="modal noprint" id="sbm" role="dialog" aria-modal="true" aria-labelledby="sbt"><div class="mbox">
+ <h3 id="sbt">Pengaturan Supabase</h3>
+ <p class="note" style="margin:0 0 14px">Setiap kali Unduh File dipakai, file otomatis diunggah ke Supabase Storage dalam folder bertanggal laporan (YYYY-MM-DD).</p>
+ <div class="f"><label class="chk"><input type="checkbox" id="sbOn"> Aktifkan unggah otomatis</label></div>
+ <div class="f"><label for="sbUrl">Project URL</label><input id="sbUrl" type="url" placeholder="https://xxxx.supabase.co" autocomplete="off"></div>
+ <div class="f"><label for="sbKey">Anon (public) key</label><input id="sbKey" type="password" placeholder="eyJ…" autocomplete="off"></div>
+ <div class="f"><label for="sbBucket">Nama bucket</label><input id="sbBucket" placeholder="shift-reports" autocomplete="off"></div>
+ <p class="note" id="sbMsg"></p>
+ <div class="btns"><button type="button" id="sbClose">Tutup</button><button type="button" id="sbSave" class="p">Simpan</button></div>
+</div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
@@ -370,6 +392,17 @@ function saveFile(name,blob){
 function cap(){return html2canvas($("scaler"),{scale:2,backgroundColor:"#ffffff",useCORS:true,scrollX:0,scrollY:-window.scrollY,
  onclone:function(doc){var s=doc.getElementById("scaler"),f=doc.getElementById("fit");s.style.transform="none";s.style.boxShadow="none";f.style.height="auto";f.style.overflow="visible";
   [].forEach.call(doc.querySelectorAll(".paper"),function(x){x.style.boxShadow="none"})}})}
+var SBK="shiftreport_p14_sb",SBD={url:"",key:"",bucket:"shift-reports",on:true};
+function sbCfg(){var c={url:SBD.url,key:SBD.key,bucket:SBD.bucket,on:SBD.on};try{var v=JSON.parse(localStorage.getItem(SBK)||"null");if(v)for(var k in v)if(v[k]!==""&&v[k]!=null)c[k]=v[k]}catch(e){}return c}
+function sbReady(c){return c.on!==false&&/^https?:\/\//.test(c.url||"")&&!!c.key&&!!c.bucket}
+function sbNote(){var c=sbCfg();$("sbNote").textContent=sbReady(c)?"☁ Terhubung ke Supabase: file otomatis tersimpan di folder tanggal laporan.":""}
+function sbUp(ext,blob){
+ var c=sbCfg();if(!sbReady(c))return Promise.resolve(null);
+ var d=S.date||today(),t=new Date(),path=d+"/shift-report-"+d+"-shift"+S.shift+"-"+pad(t.getHours())+pad(t.getMinutes())+pad(t.getSeconds())+"."+ext;
+ toast("Mengunggah ke Supabase…");
+ return fetch(c.url.replace(/\/+$/,"")+"/storage/v1/object/"+encodeURIComponent(c.bucket)+"/"+path,{method:"POST",headers:{apikey:c.key,Authorization:"Bearer "+c.key,"Content-Type":blob.type||"application/octet-stream","x-upsert":"false"},body:blob})
+ .then(function(r){if(!r.ok)return r.text().then(function(x){throw new Error(r.status+" "+x.slice(0,100))});toast("Tersimpan di Supabase: "+path)})
+ .catch(function(e){var m=e&&e.message?e.message:"";toast("Gagal mengunggah ke Supabase. "+(/fetch|network|load failed/i.test(m)||!m?"Periksa koneksi dan pengaturan. Di link claude.ai koneksi keluar diblokir; gunakan versi GitHub Pages.":m))})}
 function exportImg(ext,btn){
  var name="shift-report-"+S.date,type=ext==="png"?"image/png":"image/jpeg";
  if(!window.html2canvas||(ext==="pdf"&&!(window.jspdf&&window.jspdf.jsPDF))){toast("Pustaka unduhan belum termuat. Periksa koneksi lalu coba lagi.");return}
@@ -378,8 +411,8 @@ function exportImg(ext,btn){
  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(cap).then(function(c){
   if(ext==="pdf"){var W=c.width,H=c.height,por=H/W>0.9,pw=por?210:297,ph=por?297:210,m=8,k=Math.min((pw-2*m)/W,(ph-2*m)/H),w=W*k,
    pdf=new window.jspdf.jsPDF({orientation:por?"portrait":"landscape",unit:"mm",format:"a4"});
-   pdf.addImage(c.toDataURL("image/jpeg",0.95),"JPEG",(pw-w)/2,m,w,H*k);done();return saveFile(name+".pdf",pdf.output("blob"))}
-  return new Promise(function(r){c.toBlob(r,type,0.95)}).then(function(b){done();return b?saveFile(name+"."+ext,b):null})
+   pdf.addImage(c.toDataURL("image/jpeg",0.95),"JPEG",(pw-w)/2,m,w,H*k);var pb=pdf.output("blob");done();sbUp("pdf",pb);return saveFile(name+".pdf",pb)}
+  return new Promise(function(r){c.toBlob(r,type,0.95)}).then(function(b){done();if(!b)return null;sbUp(ext,b);return saveFile(name+"."+ext,b)})
  }).catch(function(){done();toast("Gagal membuat file unduhan.")})}
 function closeDl(){$("dlMenu").classList.remove("show");$("dlBtn").setAttribute("aria-expanded","false")}
 $("dlBtn").onclick=function(e){e.stopPropagation();var m=$("dlMenu"),o=m.classList.contains("show");closeDl();if(!o){m.classList.add("show");this.setAttribute("aria-expanded","true")}};
@@ -403,7 +436,15 @@ $("sample").onclick=function(){$("menu").classList.remove("show");swap(norm({dat
  {s:"20:10",f:"20:30",iac:"N0683CR01 (Deballer)",trouble:"- Info CCR mau di LOTOTO mau ada pekerjaan Cleaning",action:"- OFF breaker, PT. MPS & E Pasang LOTOTO di MCC"},
  {iac:"Routine Job",trouble:"- Cek temp. ruangan, level battery, FS, Pintu, UPS & DC Panel LSS 7 - 10\n*NOTE: LSS 10 Lt. bawah kurang dingin, AU 16 & 20 kurang dingin",action:"- Temp. ruangan normal, level battry aman, FS Auto, Pintu terkunci\nLSS 7: 218V 100% / 110V 125AL 100%\nLSS 8: 223V 100%\nLSS 9: 111V 125AL 100%\nLSS 10: 217V 100% / 111V 125AL 100%"}]}),"Contoh data dimuat")};
 
-load();if(S.rows.length===1)OPEN=0;render();
+$("sbBtn").onclick=function(){$("menu").classList.remove("show");var c=sbCfg();$("sbOn").checked=c.on!==false;$("sbUrl").value=c.url||"";$("sbKey").value=c.key||"";$("sbBucket").value=c.bucket||"shift-reports";$("sbMsg").textContent="";$("sbm").classList.add("show")};
+$("sbClose").onclick=function(){$("sbm").classList.remove("show")};
+$("sbm").addEventListener("click",function(e){if(e.target===this)this.classList.remove("show")});
+$("sbSave").onclick=function(){var v={on:$("sbOn").checked,url:$("sbUrl").value.trim(),key:$("sbKey").value.trim(),bucket:$("sbBucket").value.trim()||"shift-reports"};
+ if(v.on&&!/^https?:\/\//.test(v.url)){$("sbMsg").textContent="Isi Project URL yang valid, mis. https://xxxx.supabase.co";return}
+ if(v.on&&!v.key){$("sbMsg").textContent="Anon key belum diisi.";return}
+ try{localStorage.setItem(SBK,JSON.stringify(v))}catch(e){}
+ sbNote();$("sbm").classList.remove("show");toast(v.on?"Pengaturan Supabase disimpan":"Unggah otomatis dinonaktifkan")};
+load();if(S.rows.length===1)OPEN=0;render();sbNote();
 </script>
 </body>
 </html>
