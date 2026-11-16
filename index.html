@@ -392,8 +392,8 @@ function saveFile(name,blob){
 function cap(){return html2canvas($("scaler"),{scale:2,backgroundColor:"#ffffff",useCORS:true,scrollX:0,scrollY:-window.scrollY,
  onclone:function(doc){var s=doc.getElementById("scaler"),f=doc.getElementById("fit");s.style.transform="none";s.style.boxShadow="none";f.style.height="auto";f.style.overflow="visible";
   [].forEach.call(doc.querySelectorAll(".paper"),function(x){x.style.boxShadow="none"})}})}
-var SBK="shiftreport_p14_sb",SBD={url:"",key:"",bucket:"shift-reports",on:true};
-function sbCfg(){var c={url:SBD.url,key:SBD.key,bucket:SBD.bucket,on:SBD.on};try{var v=JSON.parse(localStorage.getItem(SBK)||"null");if(v)for(var k in v)if(v[k]!==""&&v[k]!=null)c[k]=v[k]}catch(e){}return c}
+var SBK="shiftreport_p14_sb",SBD={url:"https://vcbjaxpkmqhenaeaenys.supabase.co",key:"sb_publishable_w5MmM9qx3cM6JpKBXtp_vg_ox_FSZGQ",bucket:"shift-reports",on:true};
+function sbCfg(){var c={url:SBD.url,key:SBD.key,bucket:SBD.bucket,on:SBD.on};try{var v=JSON.parse(localStorage.getItem(SBK)||"null");if(v)for(var k in v)if(v[k]!==""&&v[k]!=null)c[k]=v[k]}catch(e){}c.url=String(c.url||"").trim().replace(/\/rest\/v1\/?$/,"").replace(/\/+$/,"");return c}
 function sbReady(c){return c.on!==false&&/^https?:\/\//.test(c.url||"")&&!!c.key&&!!c.bucket}
 function sbNote(){var c=sbCfg();$("sbNote").textContent=sbReady(c)?"☁ Terhubung ke Supabase: file otomatis tersimpan di folder tanggal laporan.":""}
 function sbUp(ext,blob){
