@@ -374,7 +374,7 @@ function cap(){return html2canvas($("scaler"),{scale:2,backgroundColor:"#ffffff"
 var SBD={url:"https://vcbjaxpkmqhenaeaenys.supabase.co",key:"sb_publishable_w5MmM9qx3cM6JpKBXtp_vg_ox_FSZGQ",bucket:"shift-reports"};
 function sbCfg(){return{url:String(SBD.url).trim().replace(/\/rest\/v1\/?$/,"").replace(/\/+$/,""),key:SBD.key,bucket:SBD.bucket}}
 function sbReady(c){return /^https?:\/\//.test(c.url||"")&&!!c.key&&!!c.bucket}
-function sbNote(){var c=sbCfg();$("sbNote").textContent=sbReady(c)?"☁ Unggah otomatis aktif: file tersimpan di Supabase pada folder tanggal laporan (DD-MM-YYYY).":""}
+function sbNote(){var c=sbCfg();$("sbNote").textContent=sbReady(c)?"☁ File akan ter-upload dan tersimpan secara otomatis ke Supabase.":""}
 function baseName(){var d=(S.date||today()).split("-"),t=new Date();return"Shift "+S.shift+" Report-"+d[2]+d[1]+d[0]+"-"+pad(t.getHours())+pad(t.getMinutes())+pad(t.getSeconds())}
 function sbHead(c,blob){var h={apikey:c.key,"Content-Type":blob.type||"application/octet-stream","x-upsert":"false"};if(!/^sb_/.test(c.key))h.Authorization="Bearer "+c.key;return h}
 function sbUp(name,blob){
