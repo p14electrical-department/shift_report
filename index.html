@@ -170,8 +170,8 @@ main{display:block;padding:0}
   </div>
   <div id="rows"></div>
   <button type="button" class="addbtn" id="add">+ Tambah kegiatan</button>
-  <p class="note">Satu kegiatan boleh memuat beberapa kode IAC (satu per baris). Data tersimpan otomatis di perangkat ini.</p>
-  <div class="card"><h2>Status equipment</h2><div class="eqs" id="eqs"></div><p class="note">Centang = Running. Tidak dicentang = Stop.</p></div>
+  <p class="note">Data tersimpan otomatis di perangkat ini.</p>
+  <div class="card"><h2>Status equipment</h2><div class="eqs" id="eqs"></div><p class="note">Pilih = Running. Tidak dipilih = Stop.</p></div>
   <div class="card"><h2>Lampiran</h2><div id="att"></div></div>
  </section>
 
@@ -234,7 +234,7 @@ function toast(msg,label,fn){$("tmsg").textContent=msg;var b=$("tact");b.hidden=
 
 /* ----- Form ----- */
 function sumTime(r){return(r.s||r.f)?(tm(r.s)||"--.--")+" – "+(tm(r.f)||"--.--"):"Tanpa jam"}
-function sumDesc(r){var a=fl(r.iac),b=fl(r.trouble).replace(/^[-–]\s*/,"");return[a,b].filter(Boolean).join(" · ")||"Ketuk untuk mengisi"}
+function sumDesc(r){var a=fl(r.iac),b=fl(r.trouble).replace(/^[-–]\s*/,"");return[a,b].filter(Boolean).join(" · ")||"Klik untuk mengisi"}
 function entryHtml(r,i){
  var o=OPEN===i;
  return'<article class="card entry'+(o?" open":"")+'">'+
@@ -244,7 +244,7 @@ function entryHtml(r,i){
  '<div class="f"><label>IAC Code</label><textarea rows="2" data-i="'+i+'" data-k="iac" placeholder="mis. N5063SV02">'+esc(r.iac)+'</textarea></div>'+
  '<div class="f"><label>Trouble Description</label><textarea rows="3" data-i="'+i+'" data-k="trouble" placeholder="Masalah / permintaan">'+esc(r.trouble)+'</textarea></div>'+
  '<div class="f"><label>Action</label><textarea rows="3" data-i="'+i+'" data-k="action" placeholder="Tindakan yang dilakukan">'+esc(r.action)+'</textarea></div>'+
- '<div class="f"><label>Follow Up (FU)?</label><div class="seg"><button type="button" data-fu="0" data-i="'+i+'" aria-pressed="'+!r.fu+'">Tidak</button><button type="button" data-fu="1" data-i="'+i+'" aria-pressed="'+!!r.fu+'">Ya</button></div><p class="note">Jika Ya, kolom Action kegiatan ini disorot kuning pada laporan.</p></div>'+
+ '<div class="f"><label>Follow Up (FU)?</label><div class="seg"><button type="button" data-fu="0" data-i="'+i+'" aria-pressed="'+!r.fu+'">Tidak</button><button type="button" data-fu="1" data-i="'+i+'" aria-pressed="'+!!r.fu+'">Ya</button></div><p class="note">Klik "Ya" jika Action membutuhkan follow up (FU).</p></div>'+
  '<div class="f"><label>Category</label><div class="seg">'+["A","B","C"].map(function(c){return'<button type="button" data-cat="'+c+'" data-i="'+i+'" aria-pressed="'+(r.cat===c)+'">'+c+'</button>'}).join("")+'</div>'+
  '<p class="note">A = Down Plant · B = Down Equipment · C = Running. Ketuk lagi untuk mengosongkan.</p></div>'+
  '<div class="acts"><button type="button" data-dup="'+i+'">Duplikat</button><button type="button" class="del" data-del="'+i+'">Hapus</button></div></div></article>'}
@@ -269,7 +269,7 @@ function buildPaper(){
  '<table class="rt"><colgroup><col style="width:5%"><col style="width:5.5%"><col style="width:5.5%"><col style="width:13%"><col style="width:28%"><col style="width:29%"><col style="width:8%"><col style="width:6%"></colgroup>'+
  '<thead><tr><th rowspan="2">SHIFT</th><th colspan="2">HOURS</th><th rowspan="2">IAC Code</th><th rowspan="2">Trouble Description</th><th rowspan="2">Action</th><th rowspan="2">Done By</th><th rowspan="2">Category*</th></tr>'+
  '<tr><th>Start</th><th>Finish</th></tr></thead><tbody>'+body+'</tbody></table>'+
- '<div class="lg">'+'<div class="legend"><b>Remark</b><span>A =</span><span>Down Plant</span><span></span><span>B =</span><span>Down Equipment</span><span></span><span>C =</span><span>Running</span></div>'+eqHtml()+'</div>';
+ '<div class="lg">'+'<div class="legend"><b>*Remark</b><span>A =</span><span>Down Plant</span><span></span><span>B =</span><span>Down Equipment</span><span></span><span>C =</span><span>Running</span></div>'+eqHtml()+'</div>';
  fit();
 }
 function buildEq(){$("eqs").innerHTML=EQ.map(function(k,i){var on=S.eq[k];return'<label class="eqi'+(on?" on":"")+'"><input type="checkbox" data-n="'+i+'"'+(on?" checked":"")+'><b>'+esc(k)+'</b><small>'+(on?"Running":"Stop")+'</small></label>'}).join("")}
@@ -330,7 +330,7 @@ function buildAtt(){var a=S.att,h='<div class="f"><label>Tambah lampiran?</label
  if(a.on){h+='<div class="f"><label>Jenis lampiran</label><div class="seg"><button type="button" data-ty="electric" aria-pressed="'+(a.type==="electric")+'">Electric</button><button type="button" data-ty="instrument" aria-pressed="'+(a.type==="instrument")+'">Instrument</button></div>'+(a.type?"":'<p class="note">Pilih Electric atau Instrument untuk melanjutkan.</p>')+'</div>';
   if(a.type==="electric")h+=elSec("ups")+elSec("dcp");
   if(a.type==="instrument")h+=insSec();
-  if(a.type)h+='<p class="note">Lampiran dibuat sebagai halaman terpisah dari shift report. Kosongkan isian bila tidak ada data (tampil "-").</p>'}
+  if(a.type)h+='<p class="note">Kosongkan isi keterangan/temuan bila tidak dibutuhkan.</p>'}
  else h+='<p class="note">Pilih Ya untuk menambah halaman lampiran Electric atau Instrument.</p>';
  $("att").innerHTML=h;[].forEach.call(document.querySelectorAll("#att textarea"),grow)}
 function u(v,s){v=String(v||"").trim();return v?(/^[\d.,]+$/.test(v)?v+s:v):"-"}
