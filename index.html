@@ -242,7 +242,7 @@ function toast(msg,label,fn){$("tmsg").textContent=msg;var b=$("tact");b.hidden=
 function sumTime(r){var L=r.times.filter(function(x){return x.s||x.f});if(!L.length)return"Tanpa jam";return(tm(L[0].s)||"--.--")+" – "+(tm(L[0].f)||"--.--")+(L.length>1?"  (+"+(L.length-1)+")":"")}
 function timesHtml(r,i){var h="";r.times.forEach(function(t,j){var n=j?" "+(j+1):"";
  h+='<div class="trow"><div><label>Start'+n+'</label><input type="time" data-i="'+i+'" data-t="'+j+'" data-k="s" value="'+esc(t.s)+'"></div><div><label>Finish'+n+'</label><input type="time" data-i="'+i+'" data-t="'+j+'" data-k="f" value="'+esc(t.f)+'"></div>'+(j?'<button type="button" class="mini del tx" data-delt="'+i+':'+j+'" aria-label="Hapus jam">✕</button>':"<span></span>")+"</div>"});
- return h+'<button type="button" class="mini addt" data-addt="'+i+'">+ Tambah jam (kegiatan berulang)</button>'}
+ return h+'<button type="button" class="mini addt" data-addt="'+i+'">+ Tambah jam</button>'}
 function tcol(r,k){return r.times.filter(function(x){return x.s||x.f}).map(function(x){return tm(x[k])||"-"}).join("\n")}
 function sumDesc(r){var a=fl(r.iac),b=fl(r.trouble).replace(/^[-–]\s*/,"");return[a,b].filter(Boolean).join(" · ")||"Klik untuk mengisi"}
 function entryHtml(r,i){
