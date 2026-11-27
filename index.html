@@ -89,6 +89,11 @@ select{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--
 .eqi input{width:24px;height:24px;min-height:0;padding:0;flex:none}
 .eqi b{flex:1;font-weight:600}.eqi small{color:var(--mut);font-size:13px}
 .eqi.on{border-color:var(--acc);background:var(--soft)}
+.trow{display:grid;grid-template-columns:1fr 1fr 46px;gap:10px;align-items:end;margin-bottom:10px}
+.trow>*{min-width:0}
+.trow input{min-width:0;padding-left:8px;padding-right:8px}
+.tx{width:46px;min-height:46px;padding:0}
+.addt{width:100%;min-height:44px}
 /* Tab bawah (smartphone) */
 .tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:6px}
 .tabbar button{flex:1;min-height:52px;border:0;background:none;border-radius:12px;font-weight:600;font-size:14px;color:var(--mut)}
@@ -202,7 +207,7 @@ var S={date:"",shift:"B",by:"",rows:[],att:null,eq:null},OPEN=-1,ZOOM=false,DL=n
 function $(i){return document.getElementById(i)}
 try{if(window.claude&&window.claude.use)window.claude.use("downloads").then(function(d){DL=d}).catch(function(){})}catch(e){}
 function pad(n){return String(n).padStart(2,"0")}
-function blank(){return{s:"",f:"",iac:"",trouble:"",action:"",fu:false,cat:""}}
+function blank(){return{times:[{s:"",f:""}],iac:"",trouble:"",action:"",fu:false,cat:""}}
 function today(){var d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
 function nt(v){var m=/^(\d{1,2})[.:](\d{2})$/.exec(String(v||"").trim());return m?pad(m[1])+":"+m[2]:""}
 function tm(v){return String(v||"").replace(":",".")}
@@ -224,8 +229,9 @@ function normAtt(a){a=a||{};var t=function(x){return x==null?"":String(x)};
  (a.az||[]).forEach(function(x){r.az.push({code:t(x.code)||AZC[0],co:t(x.co),no:t(x.no),o2:t(x.o2),dust:t(x.dust),hf:t(x.hf),tr:t(x.tr),so2:t(x.so2),wt:x.wt||"ok",af:x.af||"ok",pf:x.pf||"ok",fl:t(x.fl),ac:x.ac||"Dingin",ot:t(x.ot)})});
  (a.cm||[]).forEach(function(x){r.cm.push({code:t(x.code)||CMC[0],ico:t(x.ico),io2:t(x.io2),oco:t(x.oco),oo2:t(x.oo2),wt:x.wt||"ok",af:x.af||"ok",pf:x.pf||"ok",fl:t(x.fl),ac:x.ac||"Dingin",ot:t(x.ot)})});
  return r}
+function normT(x){var L=(x.times&&x.times.length?x.times:[{s:x.s,f:x.f}]).map(function(t){return{s:nt(t.s),f:nt(t.f)}});return L.length?L:[{s:"",f:""}]}
 function norm(o){var r={date:o.date||today(),shift:/^[ABC]$/.test(o.shift)?o.shift:"B",by:o.by||"",rows:[],att:normAtt(o.att),eq:normEq(o.eq)};
- (o.rows||[]).forEach(function(x){r.rows.push({s:nt(x.s),f:nt(x.f),iac:x.iac||"",trouble:x.trouble||"",action:x.action||"",fu:!!x.fu,cat:/^[ABC]$/.test(x.cat)?x.cat:""})});
+ (o.rows||[]).forEach(function(x){r.rows.push({times:normT(x),iac:x.iac||"",trouble:x.trouble||"",action:x.action||"",fu:!!x.fu,cat:/^[ABC]$/.test(x.cat)?x.cat:""})});
  if(!r.rows.length)r.rows=[blank()];return r}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function load(){try{var v=localStorage.getItem(KEY);if(v)S=norm(JSON.parse(v))}catch(e){}if(!S.date)S.date=today();if(!S.rows.length)S.rows=[blank()];if(!S.att)S.att=normAtt({});if(!S.eq)S.eq=normEq({})}
@@ -233,14 +239,17 @@ function toast(msg,label,fn){$("tmsg").textContent=msg;var b=$("tact");b.hidden=
  $("toast").classList.add("show");clearTimeout(TT);TT=setTimeout(function(){$("toast").classList.remove("show")},label?6000:3000)}
 
 /* ----- Form ----- */
-function sumTime(r){return(r.s||r.f)?(tm(r.s)||"--.--")+" – "+(tm(r.f)||"--.--"):"Tanpa jam"}
+function sumTime(r){var L=r.times.filter(function(x){return x.s||x.f});if(!L.length)return"Tanpa jam";return(tm(L[0].s)||"--.--")+" – "+(tm(L[0].f)||"--.--")+(L.length>1?"  (+"+(L.length-1)+")":"")}
+function timesHtml(r,i){var h="";r.times.forEach(function(t,j){var n=j?" "+(j+1):"";
+ h+='<div class="trow"><div><label>Start'+n+'</label><input type="time" data-i="'+i+'" data-t="'+j+'" data-k="s" value="'+esc(t.s)+'"></div><div><label>Finish'+n+'</label><input type="time" data-i="'+i+'" data-t="'+j+'" data-k="f" value="'+esc(t.f)+'"></div>'+(j?'<button type="button" class="mini del tx" data-delt="'+i+':'+j+'" aria-label="Hapus jam">✕</button>':"<span></span>")+"</div>"});
+ return h+'<button type="button" class="mini addt" data-addt="'+i+'">+ Tambah jam (kegiatan berulang)</button>'}
+function tcol(r,k){return r.times.filter(function(x){return x.s||x.f}).map(function(x){return tm(x[k])||"-"}).join("\n")}
 function sumDesc(r){var a=fl(r.iac),b=fl(r.trouble).replace(/^[-–]\s*/,"");return[a,b].filter(Boolean).join(" · ")||"Klik untuk mengisi"}
 function entryHtml(r,i){
  var o=OPEN===i;
  return'<article class="card entry'+(o?" open":"")+'">'+
  '<button type="button" class="eh" data-tg="'+i+'" aria-expanded="'+o+'"><span class="no">'+(i+1)+'</span><span class="sm"><b data-s="t'+i+'">'+esc(sumTime(r))+'</b><small data-s="d'+i+'">'+esc(sumDesc(r))+'</small></span><span class="chev">▾</span></button>'+
- '<div class="eb"><div class="row2 f"><div><label>Start</label><input type="time" data-i="'+i+'" data-k="s" value="'+esc(r.s)+'"></div>'+
- '<div><label>Finish</label><input type="time" data-i="'+i+'" data-k="f" value="'+esc(r.f)+'"></div></div>'+
+ '<div class="eb"><div class="f">'+timesHtml(r,i)+'</div>'+
  '<div class="f"><label>IAC Code</label><textarea rows="2" data-i="'+i+'" data-k="iac" placeholder="mis. N5063SV02">'+esc(r.iac)+'</textarea></div>'+
  '<div class="f"><label>Trouble Description</label><textarea rows="3" data-i="'+i+'" data-k="trouble" placeholder="Masalah / permintaan">'+esc(r.trouble)+'</textarea></div>'+
  '<div class="f"><label>Action</label><textarea rows="3" data-i="'+i+'" data-k="action" placeholder="Tindakan yang dilakukan">'+esc(r.action)+'</textarea></div>'+
@@ -258,7 +267,7 @@ function buildPaper(){
  var n=S.rows.length,body="";
  S.rows.forEach(function(r,i){
   body+="<tr>"+(i===0?'<td class="c big" rowspan="'+(n+1)+'">'+esc(S.shift)+"</td>":"")+
-   '<td class="c">'+esc(tm(r.s))+'</td><td class="c">'+esc(tm(r.f))+"</td><td>"+esc(r.iac)+"</td><td>"+esc(r.trouble)+"</td>"+actc(r.action,r.fu)+
+   '<td class="c">'+esc(tcol(r,"s"))+'</td><td class="c">'+esc(tcol(r,"f"))+"</td><td>"+esc(r.iac)+"</td><td>"+esc(r.trouble)+"</td>"+actc(r.action,r.fu)+
    (i===0?'<td class="c" rowspan="'+(n+1)+'">'+esc(S.by)+"</td>":"")+
    '<td class="c" style="font-size:14px;font-weight:600">'+esc(r.cat)+"</td></tr>";
  });
@@ -282,12 +291,14 @@ function render(){buildHead();buildForm();buildEq();buildAtt();buildPaper();buil
 /* ----- Interaksi ----- */
 function sumUpd(i){var r=S.rows[i],a=document.querySelector('[data-s="t'+i+'"]'),b=document.querySelector('[data-s="d'+i+'"]');if(a)a.textContent=sumTime(r);if(b)b.textContent=sumDesc(r)}
 $("rows").addEventListener("input",function(e){var t=e.target,i=t.dataset.i;if(i==null)return;
- var v=t.value;S.rows[i][t.dataset.k]=v;if(t.tagName==="TEXTAREA")grow(t);sumUpd(+i);buildPaper();save()});
+ var v=t.value;if(t.dataset.t!=null)S.rows[i].times[+t.dataset.t][t.dataset.k]=v;else S.rows[i][t.dataset.k]=v;if(t.tagName==="TEXTAREA")grow(t);sumUpd(+i);buildPaper();save()});
 $("rows").addEventListener("click",function(e){
  var b=e.target.closest("button");if(!b)return;var d=b.dataset;
  if(d.tg!=null){var i=+d.tg;OPEN=OPEN===i?-1:i;buildForm();if(OPEN===i)document.querySelectorAll("#rows .entry")[i].scrollIntoView({block:"nearest",behavior:"smooth"});return}
  if(d.cat){var r=S.rows[+d.i];r.cat=r.cat===d.cat?"":d.cat;[].forEach.call(b.parentNode.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x.dataset.cat===r.cat)});buildPaper();save();return}
  if(d.fu!=null){var q=S.rows[+d.i];q.fu=d.fu==="1";[].forEach.call(b.parentNode.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed",x.dataset.fu===d.fu)});buildPaper();save();return}
+ if(d.addt!=null){S.rows[+d.addt].times.push({s:"",f:""});buildForm();buildPaper();save();return}
+ if(d.delt!=null){var z=d.delt.split(":");S.rows[+z[0]].times.splice(+z[1],1);buildForm();buildPaper();save();return}
  if(d.dup!=null){var j=+d.dup;S.rows.splice(j+1,0,JSON.parse(JSON.stringify(S.rows[j])));OPEN=j+1;render();toast("Kegiatan diduplikat");return}
  if(d.del!=null){var k=+d.del,snap=JSON.stringify(S);S.rows.splice(k,1);if(!S.rows.length)S.rows=[blank()];OPEN=-1;render();
   toast("Kegiatan dihapus","Urungkan",function(){S=JSON.parse(snap);OPEN=-1;render()})}
